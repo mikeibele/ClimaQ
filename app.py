@@ -3,7 +3,7 @@ from weather import get_user_location, get_lat_lon, get_current_weather
 
 app = Flask(__name__)
 
-# Predefined list of cities
+# Predefined list of cities for demonstration
 predefined_cities = [
     {"name": "San Francisco", "country": "US"},
     {"name": "Seattle", "country": "US"},
@@ -14,13 +14,16 @@ predefined_cities = [
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    # Fetch weather for user's location
+    # Fetch the user's location based on their IP address
     user_city, user_country = get_user_location()
+    my_location_weather = None
+
     if user_city and user_country:
+        # Get coordinates for the user's location
         lat, lon = get_lat_lon(user_city, country_code=user_country)
-        my_location_weather = get_current_weather(lat, lon) if lat and lon else None
-    else:
-        my_location_weather = None
+        if lat and lon:
+            # Get current weather for the user's location
+            my_location_weather = get_current_weather(lat, lon)
 
     # Fetch weather for predefined cities
     other_weather = []
@@ -31,7 +34,7 @@ def home():
             if weather_data:
                 other_weather.append(weather_data)
 
-    # Handle search bar functionality
+    # Handle the search bar functionality for city search
     search_result = None
     if request.method == "POST":
         search_query = request.form.get("search")
@@ -40,6 +43,7 @@ def home():
             if lat and lon:
                 search_result = get_current_weather(lat, lon)
 
+    # Render the `index.html` template with all the data
     return render_template(
         "index.html",
         my_location=my_location_weather,
