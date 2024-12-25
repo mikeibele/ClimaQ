@@ -8,8 +8,8 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #121212; /* Dark background */
-            color: #ffffff; /* White text */
+            background-color: #87CEEB;
+            color: #ffffff;
         }
 
         h1 {
@@ -17,7 +17,6 @@
             margin-bottom: 20px;
         }
 
-        /* Search bar styling */
         form {
             display: flex;
             justify-content: center;
@@ -48,26 +47,17 @@
             background-color: #4682b4;
         }
 
-        /* Search result container */
-        .search-result-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        /* Weather cards container */
         .weather-container {
             display: flex;
             gap: 15px;
-            justify-content: center; /* Center all cards horizontally */
-            flex-wrap: nowrap; /* Prevent wrapping */
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        /* Individual weather card styling */
         .weather-card {
-            flex: 0 1 calc(25% - 15px); /* Fit four cards in one row */
+            flex: 0 1 calc(25% - 15px);
             max-width: 100%;
-            background: linear-gradient(135deg, #4facfe, #00f2fe); /* Default gradient */
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
             border-radius: 15px;
             padding: 20px;
             color: #fff;
@@ -75,107 +65,31 @@
             text-align: center;
         }
 
-        /* Gradient for specific weather types */
-        .weather-sunny {
-            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-        }
-
-        .weather-cloudy {
-            background: linear-gradient(135deg, #bdc3c7, #2c3e50);
-        }
-
-        .weather-rainy {
-            background: linear-gradient(135deg, #667db6, #0082c8, #667db6);
-        }
-
-        /* Weather card header */
-        .weather-card h3 {
-            margin: 0;
-            font-size: 1.5em;
-        }
-
-        .weather-card p {
-            margin: 5px 0;
-        }
-
-        .weather-details {
-            font-size: 0.9em;
-            margin-top: 10px;
-            opacity: 0.8;
-        }
-
-        /* Responsive layout */
-        @media (max-width: 768px) {
-            .weather-card {
-                flex: 0 1 calc(50% - 15px); /* 2 cards per row on smaller screens */
-            }
-
-            .weather-container {
-                flex-wrap: wrap; /* Wrap cards to the next row if needed */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .weather-card {
-                flex: 0 1 calc(100% - 15px); /* 1 card per row on very small screens */
-            }
+        .weather-card a {
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 </head>
 <body>
     <h1>ClimaQ</h1>
-
-    <!-- Search Form -->
     <form method="POST" action="/">
         <input type="text" name="search" placeholder="Search for a city or airport" required>
         <button type="submit">Search</button>
     </form>
 
-    <!-- Search Result Card in a Separate Row -->
-    {% if search_result %}
-    <div class="search-result-container">
-        <div class="weather-card weather-sunny">
-            <h3>{{ search_result.city }}</h3>
-            <p>{{ search_result.temperature }}°</p>
-            <p>{{ search_result.description }}</p>
-            <div class="weather-details">
-                <p>H: {{ search_result.high }}° L: {{ search_result.low }}°</p>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Weather Cards Container -->
     <div class="weather-container">
-        <!-- My Location Weather Card -->
-        {% if my_location %}
-        <div class="weather-card weather-sunny">
-            <h3>My Location</h3>
-            <p>{{ my_location.temperature }}°</p>
-            <p>{{ my_location.description }}</p>
-            <div class="weather-details">
-                <p>H: {{ my_location.high }}° L: {{ my_location.low }}°</p>
-            </div>
-        </div>
-        {% else %}
-        <div class="weather-card">
-            <h3>My Location</h3>
-            <p>Unable to fetch weather for your location.</p>
-        </div>
-        {% endif %}
-
-        <!-- Weather Cards for Predefined Cities -->
         {% for weather in other_weather %}
-        {% if weather.city != "Los Angeles" %} <!-- Exclude Los Angeles -->
-        <div class="weather-card weather-{{ weather.type|lower }}">
-            <h3>{{ weather.city }}</h3>
-            <p>{{ weather.temperature }}°</p>
-            <p>{{ weather.description }}</p>
-            <div class="weather-details">
-                <p>H: {{ weather.high }}° L: {{ weather.low }}°</p>
-            </div>
+        <div class="weather-card">
+            <a href="/weather/{{ weather.city }}">
+                <h3>{{ weather.city }}</h3>
+                <p>{{ weather.temperature }}°</p>
+                <p>{{ weather.description }}</p>
+                <div class="weather-details">
+                    <p>H: {{ weather.high }}° L: {{ weather.low }}°</p>
+                </div>
+            </a>
         </div>
-        {% endif %}
         {% endfor %}
     </div>
 </body>

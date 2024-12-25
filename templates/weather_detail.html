@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ city }} Weather Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to top, #87CEEB, #4682B4);
+            color: #fff;
+        }
+        .container {
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        .forecast-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .forecast-title {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .forecast-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .forecast-item img {
+            width: 50px;
+            height: 50px;
+        }
+        .forecast-item p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather in {{ city }}</h1>
+
+        <!-- Hourly Forecast Section -->
+        <div class="forecast-section">
+            <div class="forecast-title">Hourly Forecast</div>
+            {% for hour in hourly_weather %}
+            <div class="forecast-item">
+                <div>
+                    <p><strong>{{ hour.time }}</strong></p>
+                    <p>{{ hour.temp }}°C</p>
+                </div>
+                <img src="{{ hour.icon }}" alt="{{ hour.description }}">
+                <p>{{ hour.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Daily Forecast Section -->
+        <div class="forecast-section">
+            <div class="forecast-title">7-Day Forecast</div>
+            {% for day in daily_weather %}
+            <div class="forecast-item">
+                <div>
+                    <p><strong>{{ day.day }}</strong></p>
+                    <p>{{ day.temp }}°C</p>
+                </div>
+                <img src="{{ day.icon }}" alt="{{ day.description }}">
+                <div>
+                    <p>H: {{ day.high }}°C</p>
+                    <p>L: {{ day.low }}°C</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
