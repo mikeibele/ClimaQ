@@ -30,7 +30,49 @@
             text-align: center;
             margin-bottom: 15px;
         }
+        /* Hourly Forecast Section Styling */
+        .hourly-forecast-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #4682B4 #87CEEB;
+        }
+        .hourly-forecast-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .hourly-forecast-container::-webkit-scrollbar-thumb {
+            background-color: #4682B4;
+            border-radius: 4px;
+        }
+        .hourly-forecast-container::-webkit-scrollbar-track {
+            background-color: #87CEEB;
+        }
+        .hourly-forecast-item {
+            flex: 0 0 auto;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            width: 100px;
+        }
+        .hourly-forecast-item img {
+            width: 50px;
+            height: 50px;
+        }
+        .hourly-forecast-item p {
+            margin: 5px 0;
+        }
+        /* Daily Forecast Section Styling */
+        .daily-forecast-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px;
+        }
         .forecast-item {
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -38,10 +80,23 @@
             padding: 10px;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.3);
+            width: 180px;
+            min-width: 180px;
+            box-sizing: border-box;
         }
         .forecast-item img {
             width: 50px;
             height: 50px;
+        }
+        .forecast-item .text-container {
+            flex-grow: 1;
+            padding: 0 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .forecast-item .temp {
+            font-size: 1.2rem;
         }
         .forecast-item p {
             margin: 0;
@@ -55,34 +110,37 @@
         <!-- Hourly Forecast Section -->
         <div class="forecast-section">
             <div class="forecast-title">Hourly Forecast</div>
-            {% for hour in hourly_weather %}
-            <div class="forecast-item">
-                <div>
+            <div class="hourly-forecast-container">
+                {% for hour in hourly_weather %}
+                <div class="hourly-forecast-item">
                     <p><strong>{{ hour.time }}</strong></p>
+                    <img src="{{ hour.icon }}" alt="{{ hour.description }}">
                     <p>{{ hour.temp }}°C</p>
+                    <p>{{ hour.description }}</p>
                 </div>
-                <img src="{{ hour.icon }}" alt="{{ hour.description }}">
-                <p>{{ hour.description }}</p>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
 
         <!-- Daily Forecast Section -->
         <div class="forecast-section">
             <div class="forecast-title">7-Day Forecast</div>
-            {% for day in daily_weather %}
-            <div class="forecast-item">
-                <div>
-                    <p><strong>{{ day.day }}</strong></p>
-                    <p>{{ day.temp }}°C</p>
+            <div class="daily-forecast-container">
+                {% for day in daily_weather %}
+                <div class="forecast-item">
+                    <div class="text-container">
+                        <!-- Abbreviate day names here -->
+                        <p><strong>{{ day.day|replace("Monday", "Mon")|replace("Tuesday", "Tue")|replace("Wednesday", "Wed")|replace("Thursday", "Thu")|replace("Friday", "Fri")|replace("Saturday", "Sat")|replace("Sunday", "Sun") }}</strong></p>
+                        <p class="temp">{{ day.temp }}°C</p>
+                    </div>
+                    <img src="{{ day.icon }}" alt="{{ day.description }}">
+                    <div class="text-container">
+                        <p>H: {{ day.high }}°C</p>
+                        <p>L: {{ day.low }}°C</p>
+                    </div>
                 </div>
-                <img src="{{ day.icon }}" alt="{{ day.description }}">
-                <div>
-                    <p>H: {{ day.high }}°C</p>
-                    <p>L: {{ day.low }}°C</p>
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
 </body>

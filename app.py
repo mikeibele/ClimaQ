@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -83,15 +83,25 @@ def fetch_weather_data(city):
     
     return hourly_weather, daily_weather
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    search_results = None
+    if request.method == 'POST':
+        city = request.form['search']
+        hourly_weather, daily_weather = fetch_weather_data(city)
+        search_results = {
+            'city': city,
+            'hourly_weather': hourly_weather,
+            'daily_weather': daily_weather
+        }
+    
     other_weather = [
         {'city': 'New York', 'temperature': 76, 'description': 'Sunny', 'high': 79, 'low': 70},
         {'city': 'Los Angeles', 'temperature': 85, 'description': 'Clear', 'high': 88, 'low': 75},
         {'city': 'Chicago', 'temperature': 65, 'description': 'Cloudy', 'high': 68, 'low': 60},
         {'city': 'Miami', 'temperature': 90, 'description': 'Hot', 'high': 92, 'low': 85},
     ]
-    return render_template('index.html', other_weather=other_weather)
+    return render_template('index.html', other_weather=other_weather, search_results=search_results)
 
 @app.route('/weather/<city>')
 def weather_detail(city):

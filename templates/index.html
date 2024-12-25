@@ -54,6 +54,7 @@
             flex-wrap: wrap;
         }
 
+        /* Style for weather cards */
         .weather-card {
             flex: 0 1 calc(25% - 15px);
             max-width: 100%;
@@ -69,6 +70,28 @@
             text-decoration: none;
             color: inherit;
         }
+
+        /* Style for the search result card */
+        .search-result-card {
+            flex: 0 1 calc(25% - 15px);
+            max-width: 100%;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 15px;
+            padding: 20px;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-bottom: 30px; /* Adds margin bottom to the searched result */
+        }
+
+        /* Adjust for the weather cards to fit in a single row */
+        .weather-container-single-row {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+            flex-wrap: nowrap;  /* Ensure it stays in a single row */
+            overflow-x: auto;   /* Add horizontal scrolling if needed */
+        }
     </style>
 </head>
 <body>
@@ -78,7 +101,24 @@
         <button type="submit">Search</button>
     </form>
 
+    {% if search_results %}
+    <!-- Display search result card -->
     <div class="weather-container">
+        <div class="weather-card search-result-card">
+            <a href="/weather/{{ search_results.city }}">
+                <h3>{{ search_results.city }}</h3>
+                <p>{{ search_results.hourly_weather[0].temp }}°C</p>
+                <p>{{ search_results.hourly_weather[0].description }}</p>
+                <div class="weather-details">
+                    <p>H: {{ search_results.daily_weather[0].high }}° L: {{ search_results.daily_weather[0].low }}°</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Display other weather cards in a single row -->
+    <div class="weather-container-single-row">
         {% for weather in other_weather %}
         <div class="weather-card">
             <a href="/weather/{{ weather.city }}">
